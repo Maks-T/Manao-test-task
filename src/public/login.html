@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Tsatsura Manao</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__wrapper">
+        <div class="login-menu">
+          <button class="btn-login" id="btn-log">Log in</button>
+          <button class="btn-login" id="btn-reg">Registration</button>
+        </div>
+      </div>
+    </header>
+    <main>
+      <form class="form-auth" action="" method="POST">
+        <p class="form-auth__title">Login</p>
+
+        <input
+          class="form-auth__input login-icon"
+          type="text"
+          name="login"
+          placeholder="Login"
+          id="login"
+        />
+        <label
+          class="form-auth__label hide"
+          id="login-message"
+          for="login"
+        ></label>
+
+        <input
+          class="form-auth__input password-icon"
+          type="password"
+          name="password"
+          placeholder="Password"
+          id="password"
+        />
+        <label
+          class="form-auth__label hide"
+          id="password-message"
+          for="password"
+        ></label>
+
+        <input
+          class="form-auth__btn-submit"
+          type="submit"
+          name="submit"
+          disabled
+        />
+      </form>
+    </main>
+    <footer class="footer"></footer>
+
+    <script src="js/login.js"></script>
+  </body>
+</html>
