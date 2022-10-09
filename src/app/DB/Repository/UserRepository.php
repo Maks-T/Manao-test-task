@@ -19,8 +19,6 @@ class UserRepository
     }
 
     public function createUser(User $user): ?User {
-
-
         $findUser = $this->getUserByLogin($user->login);
 
         if (!$findUser) {
@@ -44,7 +42,6 @@ class UserRepository
     }
 
     public function updateUserById(string $id, User $user): ?User {
-
         $findUser = $this->getUserById($id);
 
         if ($findUser) {

@@ -17,7 +17,6 @@ class LoginService
     function isUserLogin()
     {
         if (isset($_COOKIE["PHPSESSID"]) && isset($_COOKIE["id"])) {
-
             $user = $this->userRepository->getUserById($_COOKIE["id"]);
 
             if ($user && $user->session === $_COOKIE["PHPSESSID"]) {

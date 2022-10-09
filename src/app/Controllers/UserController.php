@@ -21,22 +21,19 @@ class UserController extends Controller
     public function create(): void
     {
         $userData = $this->request->getData();
-
         $this->checkUserData($userData);
-
         if (isset($userData['id'])) {
             unset($userData['id']);
         }
 
         $userData['password'] = $this->serviceJWT->createTokenByPassword($userData['password']);
-
         $userModel = new User($userData);
         $user = $this->userRepository->createUser($userModel);
 
         if ($user) {
             $this->userService->setUserCookies($user);
-
             $this->userService->sendSuccessMessage($user);
+
             return;
         }
 
@@ -49,39 +46,32 @@ class UserController extends Controller
     public function get(): void
     {
         $user = $this->userRepository->getUserById($_GET['id']);
-
         $this->userService->isUserNotFound($user);
-
         $this->userService->sendSuccessMessage($user);
     }
 
     public function update(): void
     {
         $userData = $this->request->getData();
-
         $userModel = new User($userData);
         $user = $this->userRepository->updateUserById($userModel->id, $userModel);
-
         $this->userService->isUserNotFound($user);
-
         $this->userService->sendSuccessMessage($user);
     }
 
     public function delete(): void
     {
         $user = $this->userRepository->deleteUserById($_GET['id']);
-
         $this->userService->isUserNotFound($user);
-
         $this->userService->sendSuccessMessage($user, 204);
     }
 
-    public function checkUserData(&$data): void
+    public function checkUserData($data): void
     {
         $errors = [];
 
         //Check login
-        if (!isset($data['login']) || (strlen(str_replace(" ", "", $data['login'])) < 6)) {
+        if (!isset($data['login']) || (strlen($data['login']) < 6)) {
             $errors['login'] = 'Login is empty or its length is less than 6 characters';
         } else {
             $user = $this->userRepository->getUserByLogin($data['login']);
@@ -135,6 +125,4 @@ class UserController extends Controller
             );
         }
     }
-
-
 }

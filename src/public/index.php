@@ -15,8 +15,6 @@ new AppException();
 
 new ConfigApp();
 
-//header('Content-Type: application/json');
-
 $router = new Router();
 
 $router->get('/', [HomeController::class, 'index']);

@@ -22,7 +22,6 @@ class JsonDB
         foreach ($itemsJson as $itemJson) {
             $this->items[] = new $class((array)$itemJson);
         }
-
     }
 
     public function create(object $item): ?object

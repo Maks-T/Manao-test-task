@@ -19,11 +19,8 @@ class LoginController extends Controller
     public function login(): void
     {
         $loginData = $this->request->getData();
-
         $user = $this->userRepository->getUserByLogin($loginData['login']);
-
         $this->userService->isUserNotFoundByLogin($user);
-
         $isValidatePassword = $this->serviceJWT->validatePasswordByToken($loginData['password'], $user->password);
 
         if (!$isValidatePassword) {
