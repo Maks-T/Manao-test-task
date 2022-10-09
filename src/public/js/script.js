@@ -22,8 +22,6 @@ const submitFormHandle = async (e) => {
 
   const result = await sendFormData(Object.fromEntries(formData));
 
-  console.log(result);
-
   if (result.status === 'success') {
     window.location.replace('/');
   }
@@ -39,7 +37,7 @@ const inputChangeHandle = (e) => {
   inputsForm.forEach((input) => (input.value = input.value.replace(/\s/g, '')));
 
   const label = formAuth.querySelector(`#${e.target.id}-message`);
-  console.log(label);
+
   label.classList.remove('hide');
   label.innerHTML = '';
 

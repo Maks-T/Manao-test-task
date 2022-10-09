@@ -46,7 +46,4 @@ class HomeController extends Controller
         }
         include_once 'login.html';
     }
-
-
-
 }

@@ -35,5 +35,4 @@ class LoginController extends Controller
         $this->userRepository->updateUserById($user->id, $user);
         $this->userService->sendSuccessMessage($user);
     }
-
 }

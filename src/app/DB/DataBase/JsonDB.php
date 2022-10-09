@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DB\DataBase;
 
+use App\Exceptions\AppException;
+
 class JsonDB
 {
     private string $path;
@@ -31,8 +33,10 @@ class JsonDB
 
             return $item;
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            return null;
+            throw new \Exception(
+                json_encode(['status' => 'fatal']),
+                AppException::INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -65,8 +69,10 @@ class JsonDB
 
             return $item ?? null;
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            return null;
+            throw new \Exception(
+                json_encode(['status' => 'fatal']),
+                AppException::INTERNAL_SERVER_ERROR
+            );
         }
     }
 
@@ -87,8 +93,10 @@ class JsonDB
 
             return $item ?? null;
         } catch (\Exception $e) {
-            echo $e->getMessage();
-            return null;
+            throw new \Exception(
+                json_encode(['status' => 'fatal']),
+                AppException::INTERNAL_SERVER_ERROR
+            );
         }
     }
 

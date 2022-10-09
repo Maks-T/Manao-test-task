@@ -25,9 +25,10 @@ class AppException
             case self::ROURE_NOT_FOUND:
                 $this->homeController->index();
                 break;
-            case 400:
-            case 401:
-            case 404:
+            case self::BAD_REQUEST:
+            case self::NOT_FOUND:
+            case self::INTERNAL_SERVER_ERROR:
+            default:
                 http_response_code($e->getCode());
                 echo $e->getMessage();
                 break;

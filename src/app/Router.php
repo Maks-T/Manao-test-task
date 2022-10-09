@@ -58,10 +58,12 @@ class Router
             throw new \Exception("", AppException::ROURE_NOT_FOUND);
         }
 
-        [$class, $method] = $action;
+        [$class, $method, $contentType] = $action;
 
         if (class_exists($class)) {
             $class = new $class;
+
+            header("Content-Type: $contentType");
 
             if (method_exists($class, $method)) {
                 return call_user_func_array([$class, $method], []);
