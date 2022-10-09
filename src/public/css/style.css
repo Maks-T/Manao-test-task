@@ -235,7 +235,8 @@ body {
   box-shadow: 1px 1px 14px #36b925;
 }
 
-.form-auth__input:invalid {
+.form-auth__input:invalid,
+.invalid {
   box-shadow: 1px 1px 14px red;
 }
 

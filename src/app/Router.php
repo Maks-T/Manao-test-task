@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Exceptions\RouteNotFoundException;
+use App\Exceptions\AppException;
+
 
 class Router
 {
@@ -45,13 +46,18 @@ class Router
         return $this;
     }
 
+
+    /**
+     * @throws \Exception
+     */
     public function resolve(string $requestUri, string $requestMethod)
     {
+
         $route = explode('?', $requestUri)[0];
         $action = $this->routes[$requestMethod][$route] ?? null;
 
         if (!$action) {
-            throw new RouteNotFoundException();
+            throw new \Exception("", AppException::ROURE_NOT_FOUND);
         }
 
         [$class, $method] = $action;
@@ -64,7 +70,6 @@ class Router
             }
         }
 
-        throw new RouteNotFoundException();
+        throw new \Exception("", AppException::ROURE_NOT_FOUND);
     }
-
 }

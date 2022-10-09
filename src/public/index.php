@@ -5,17 +5,14 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Controllers\HomeController;
 use App\Controllers\UserController;
 use App\Controllers\LoginController;
+use App\Exceptions\AppException;
 use App\Router;
 use App\ConfigApp;
 
+
 session_start();
 
-if (isset($_SESSION["visit_count"])) {
-    $visit_count = $_SESSION["visit_count"] + 1;
-}
-setcookie("visit_count", $visit_count, strtotime("+30 days"));
-$_SESSION["visit_count"] = $visit_count;
-
+new AppException();
 
 new ConfigApp();
 
@@ -33,5 +30,7 @@ $router->delete('/user', [UserController::class, 'delete']);
 $router->post('/user/login', [LoginController::class, 'login']);
 
 $router->resolve($_SERVER['REQUEST_URI'], strtolower($_SERVER['REQUEST_METHOD']));
+
+
 
 
