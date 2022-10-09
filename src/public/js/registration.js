@@ -1,4 +1,4 @@
-const URI = 'http://localhost:8000/user';
+const URI = '/user';
 
 const checkMatchPassword = () => {
   const inputPassword = document.querySelector('#password');
