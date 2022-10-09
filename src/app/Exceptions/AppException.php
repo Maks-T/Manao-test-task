@@ -9,6 +9,9 @@ class AppException
     private HomeController $homeController;
 
     const ROURE_NOT_FOUND = 1;
+    const BAD_REQUEST = 400;
+    const NOT_FOUND = 404;
+    const INTERNAL_SERVER_ERROR = 500;
 
     public function __construct()
     {
@@ -22,8 +25,11 @@ class AppException
             case self::ROURE_NOT_FOUND:
                 $this->homeController->index();
                 break;
-            case 2:
-                echo "i равно 2";
+            case 400:
+            case 401:
+            case 404:
+                http_response_code($e->getCode());
+                echo $e->getMessage();
                 break;
         }
     }

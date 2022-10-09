@@ -33,4 +33,13 @@ class User
                 ? session_id()
                 : $userData['session'];
     }
+
+    public function response() {
+        return [
+            'id'=>$this->id,
+            'login'=>$this->login,
+            'email'=>$this->email,
+            'name'=>$this->name
+        ];
+    }
 }

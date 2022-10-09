@@ -5,19 +5,24 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\DB\Model\User;
+use App\Exceptions\AppException;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
+    private UserService $userService;
+
     public function __construct()
     {
         parent::__construct();
+        $this->userService = new UserService();
     }
 
     public function create(): void
     {
         $userData = $this->request->getData();
 
-        if ($this->checkUserData($userData)) return;
+        $this->checkUserData($userData);
 
         if (isset($userData['id'])) {
             unset($userData['id']);
@@ -29,75 +34,49 @@ class UserController extends Controller
         $user = $this->userRepository->createUser($userModel);
 
         if ($user) {
-            http_response_code(200);
+            $this->userService->setUserCookies($user);
 
-            setcookie("login", $user->login, strtotime("+30 days"), '/');
-            setcookie("id", $user->id, strtotime("+30 days"), '/');
-            setcookie("email", $user->email, strtotime("+30 days"), '/');
-            setcookie("name", $user->name, strtotime("+30 days"), '/');
-
-            echo json_encode([
-                'status'=>'success'
-            ]);
+            $this->userService->sendSuccessMessage($user);
             return;
         }
 
-        http_response_code(500);
-        echo json_encode([
-            'status'=>'fatal'
-        ]);
+        throw new \Exception(
+            json_encode(['status' => 'fatal']),
+            AppException::INTERNAL_SERVER_ERROR
+        );
     }
 
     public function get(): void
     {
         $user = $this->userRepository->getUserById($_GET['id']);
 
-        header('Content-Type: application/json');
+        $this->userService->isUserNotFound($user);
 
-        if (!$user) {
-            http_response_code(404);
-            echo json_encode(['message' => "User with id='{$_GET['id']}' hasn't exist"]);
-            return;
-        }
-
-        http_response_code(200);
-        echo json_encode($user);
+        $this->userService->sendSuccessMessage($user);
     }
 
     public function update(): void
     {
-        $userData = $this->$this->request->getData();
+        $userData = $this->request->getData();
+
         $userModel = new User($userData);
         $user = $this->userRepository->updateUserById($userModel->id, $userModel);
-        header('Content-Type: application/json');
 
-        if (!$user) {
-            http_response_code(404);
-            echo json_encode(['message' => "User with id='{$_GET['id']}' hasn't exist"]);
-            return;
-        }
+        $this->userService->isUserNotFound($user);
 
-        http_response_code(200);
-        echo json_encode($user);
+        $this->userService->sendSuccessMessage($user);
     }
 
     public function delete(): void
     {
         $user = $this->userRepository->deleteUserById($_GET['id']);
 
-        header('Content-Type: application/json');
+        $this->userService->isUserNotFound($user);
 
-        if (!$user) {
-            http_response_code(404);
-            echo json_encode(['message' => "User with id='{$_GET['id']}' hasn't exist"]);
-            return;
-        }
-
-        http_response_code(204);
-        echo $user;
+        $this->userService->sendSuccessMessage($user, 204);
     }
 
-    private function checkUserData($data): bool
+    public function checkUserData($data): void
     {
         $errors = [];
 
@@ -150,12 +129,11 @@ class UserController extends Controller
         }
 
         if (count($errors)) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'errors' => $errors]);
-            return true;
+            throw new \Exception(
+                json_encode(['status' => 'error', 'errors' => $errors]),
+                AppException::BAD_REQUEST
+            );
         }
-
-        return false;
     }
 
 }

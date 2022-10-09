@@ -4,9 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Services\UserService;
 
 class LoginController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userService = new UserService();
+    }
 
     public function login(): void
     {
@@ -14,47 +22,18 @@ class LoginController extends Controller
 
         $user = $this->userRepository->getUserByLogin($loginData['login']);
 
-        header('Content-Type: application/json');
-
-        if (!$user) {
-            http_response_code(400);
-            echo json_encode([
-                'status'=>'error',
-                'errors' => [
-                    'login'=>"User with login={$loginData['login']} doesn't exist",
-                ]
-            ]);
-            return;
-        }
+        $this->userService->isUserNotFoundByLogin($user);
 
         $isValidatePassword = $this->serviceJWT->validatePasswordByToken($loginData['password'], $user->password);
 
-        if ($isValidatePassword) {
-            http_response_code(200);
-
-            setcookie("login", $user->login, strtotime("+30 days"), '/');
-            setcookie("id", $user->id, strtotime("+30 days"), '/');
-            setcookie("email", $user->email, strtotime("+30 days"), '/');
-            setcookie("name", $user->name, strtotime("+30 days"), '/');
-
-            $user->session = session_id();
-
-            $this->userRepository->updateUserById($user->id, $user);
-
-            echo json_encode([
-                'status'=>'success'
-            ]);
-            return;
+        if (!$isValidatePassword) {
+            $this->userService->isPasswordInvalid();
         }
 
-        http_response_code(400);
-        echo json_encode([
-            'status'=>'error',
-            'errors' => [
-                'password'=>"Password is invalid!",
-            ]
-        ]);
-
+        $this->userService->setUserCookies($user);
+        $user->session = session_id();
+        $this->userRepository->updateUserById($user->id, $user);
+        $this->userService->sendSuccessMessage($user);
     }
 
 }
