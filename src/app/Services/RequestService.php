@@ -9,7 +9,7 @@ class RequestService
         $req = json_decode(file_get_contents('php://input'));
         $data = [];
         foreach ($req as $field => $valueField) {
-            $data[$field] = $valueField;
+            $data[$field] = str_replace(" ", "", $valueField);
         }
 
         return $data;

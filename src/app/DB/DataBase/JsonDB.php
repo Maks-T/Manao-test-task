@@ -33,7 +33,7 @@ class JsonDB
 
             return $item;
         } catch (\Exception $e) {
-            throw new \Exception(
+            throw new \Error(
                 json_encode(['status' => 'fatal']),
                 AppException::INTERNAL_SERVER_ERROR
             );
@@ -69,7 +69,7 @@ class JsonDB
 
             return $item ?? null;
         } catch (\Exception $e) {
-            throw new \Exception(
+            throw new \Error(
                 json_encode(['status' => 'fatal']),
                 AppException::INTERNAL_SERVER_ERROR
             );
@@ -93,7 +93,7 @@ class JsonDB
 
             return $item ?? null;
         } catch (\Exception $e) {
-            throw new \Exception(
+            throw new \Error(
                 json_encode(['status' => 'fatal']),
                 AppException::INTERNAL_SERVER_ERROR
             );

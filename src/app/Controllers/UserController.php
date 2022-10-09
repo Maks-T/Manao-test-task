@@ -40,7 +40,7 @@ class UserController extends Controller
             return;
         }
 
-        throw new \Exception(
+        throw new \Error(
             json_encode(['status' => 'fatal']),
             AppException::INTERNAL_SERVER_ERROR
         );
@@ -76,12 +76,12 @@ class UserController extends Controller
         $this->userService->sendSuccessMessage($user, 204);
     }
 
-    public function checkUserData($data): void
+    public function checkUserData(&$data): void
     {
         $errors = [];
 
         //Check login
-        if (!isset($data['login']) || (strlen($data['login']) < 6)) {
+        if (!isset($data['login']) || (strlen(str_replace(" ", "", $data['login'])) < 6)) {
             $errors['login'] = 'Login is empty or its length is less than 6 characters';
         } else {
             $user = $this->userRepository->getUserByLogin($data['login']);
@@ -135,5 +135,6 @@ class UserController extends Controller
             );
         }
     }
+
 
 }
